@@ -1,5 +1,4 @@
 # hive-migration
-Migrating Hive Tables from one Hadoop Cluster to another and across versions
 
 This repository talks of Hive schema migration from one Hadoop cluster to another, or from one Hive 
 version to another.
