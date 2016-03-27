@@ -1,0 +1,42 @@
+
+-- -----------------------------------------------------------------
+-- Manual to execute
+-- -----------------------------------------------------------------
+
+
+-- -----------------------------------------------------------------
+-- STEP 0: Migrate HDFS data
+-- ----------------------------------------------------------------
+
+Copy all data to the target HDFS such data the data is exactly same as source.
+
+
+The following lists out steps to the run the SQL scripts.
+
+-- -----------------------------------------------------------------
+-- STEP 1: Migrate DB
+-- -----------------------------------------------------------------
+
+Run 1_SourceMetaStore_CreateDB.sql in the MetaStore of the Source Hive Installation.
+(MySQL DB)
+Take the output, change Hive Schema name/version if required and run the hive script
+in target installation.
+
+-- -----------------------------------------------------------------
+-- STEP 2: Migrate Table Schemas
+-- -----------------------------------------------------------------
+
+Run 2_SourceMetaStore_ShowCT.sql in the MetaStore of the Source Hive Installation.
+Take the output and run in Source Hive Installation. 
+Take the output and change NameNode information.
+Take the output and run the hive script in target Hive installation.
+
+-- -----------------------------------------------------------------
+-- STEP 3: Migrate Partition Information
+-- -----------------------------------------------------------------
+
+Provide appropritate information in 3_SourceMetaStore_AddPartition.sql and run in 
+the MetaStore of the Source Hive Installation.
+Take the output and run in target Hive Installation.
+
+
