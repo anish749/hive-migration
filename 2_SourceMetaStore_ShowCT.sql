@@ -1,6 +1,6 @@
 -- Query for Creating Show CT Statements to be run in the Source Hive Installation
 
-set @SCHEMA_TO_MIGRATE = '%ani%';
+SET @SCHEMA_TO_MIGRATE = '%ani%';
 
 SELECT 
     CONCAT('SHOW CREATE TABLE ',
