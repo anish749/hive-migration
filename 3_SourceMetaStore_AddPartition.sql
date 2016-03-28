@@ -1,6 +1,7 @@
 -- Query to create add partition scripts to run in target Hive Installation
 
-SET @prevDB = "nodbxyzqwerty"; -- Note - this DB should not exist in the source Hive Installation
+SET @SCHEMA_TO_MIGRATE = '%ani%';
+SET @prevDB = 'nodbxyzabc_0b040aca_d613_4c47_9e2c_b21daafba13f'; -- Note - this DB should not exist in the source Hive Installation
 SET @oldNameNode = 'hdfs://localhost:9000/'; -- Old NameNode address
 SET @newNameNode = 'hdfs://newhostName:8020/'; -- New NameNode address
 
@@ -32,7 +33,7 @@ FROM
     WHERE
         D.name LIKE @SCHEMA_TO_MIGRATE
     GROUP BY P.PART_ID
-    ORDER BY D.name) alias1 INTO OUTFILE 'generatedSQL/target/3_ADD_PART.hql'	
+    ORDER BY D.name) alias1 INTO OUTFILE 'generatedSQL_target/3_ADD_PART.hql'	
 	
  
  
