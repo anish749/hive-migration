@@ -11,7 +11,10 @@
 Copy all data to the target HDFS such data the data is exactly same as source.
 
 
-The following lists out steps to the run the SQL scripts.
+The following lists out steps to the run the SQL scripts. Alternatively one can use 
+the source side shell wrapper script "source_shell_wrapper.sh" to extract Hive
+schema information from the source side. The output needs to be run in the target
+Hive Installation. Details of confs in later section.
 
 -- -----------------------------------------------------------------
 -- STEP 1: Migrate DB
@@ -39,4 +42,22 @@ Provide appropritate information in 3_SourceMetaStore_AddPartition.sql and run i
 the MetaStore of the Source Hive Installation.
 Take the output and run in target Hive Installation.
 
+-- -----------------------------------------------------------------
+-- END
+-- -----------------------------------------------------------------
+
+-- -----------------------------------------------------------------
+-- STEP 0: Using source_shell_wrapper.sh to migrate
+-- -----------------------------------------------------------------
+
+The source_shell_wrapper.sh file automates the SQL execution on the source Hive
+istallation. The output can be directly run in the target Hive installaion
+after suitable verification.
+The configurations for this script is sourced from source_wrapper.properties.
+
+Put the shell script and property file in same folder, and run the shell script
+as root user. The output to be run in target Hive installation is placed in 
+generatedSQL_target_Hive/* . Run the scripts in target Hive installation in order.
+
+-- -----------------------------------------------------------------
 
