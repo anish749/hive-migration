@@ -6,7 +6,6 @@ outputSourcePath=$(pwd)/generatedSQL_source_Hive
 #Hive Script Path for target Hive Installation Scripts
 outputTargetPath=$(pwd)/generatedSQL_target_Hive
 
-
 mysql -h$MYSQL_SERVER_HOST -u $HIVE_METASTORE_USER -p$HIVE_METASTORE_PASS -D$HIVE_METASTORE_SCHEMA --skip-column-names -e"
 -- Query to Create COUNT(*) Validation queries for Non Partitioned tables.
 
@@ -27,11 +26,18 @@ WHERE D.NAME LIKE @SCHEMA_TO_MIGRATE
         FROM PARTITIONS P
         WHERE P.TBL_ID = T.TBL_ID
         ); " >$outputSourcePath/2_COUNT_NON_PARTITION_TBLS.hql
-
-
-
-mysql -h$MYSQL_SERVER_HOST -u $HIVE_METASTORE_USER -p$HIVE_METASTORE_PASS -D$HIVE_METASTORE_SCHEMA --skip-column-names -e"
--- Query to Create COUNT(*) Validation queries at a partition level for Partitioned tables.
+ret=$?
+if [ $ret -ne 0 ];
+then
+	echo "Error - MySQL Error code is $ret while trying to extract COUNT validation scripts for non partitioned tables"
+	exit $ret
+else
+	echo "COUNT validation scripts for non partitioned tables completed successfully. Stored in $outputSourcePath/2_COUNT_NON_PARTITION_TBLS.hql"
+fi   
+	
+	
+mysql -h$MYSQL_SERVER_HOST -u $HIVE_METASTORE_USER -p$HIVE_METASTORE_PASS -D$HIVE_METASTORE_SCHEMA --skip-column-names -e"	
+-- Query to Create COUNT(*) Validation queries at a partition level for Partitioned tables.	
 
 SET @SCHEMA_TO_MIGRATE = '$SCHEMA_TO_MIGRATE';
 
@@ -55,6 +61,15 @@ INNER JOIN PARTITIONS P ON P.TBL_ID = T.TBL_ID
 WHERE D.NAME LIKE @SCHEMA_TO_MIGRATE
 GROUP BY P.PART_ID
 ORDER BY D.NAME;  " >$outputSourcePath/3_COUNT_PARTITIONS_TBLS.hql
+ret=$?
+if [ $ret -ne 0 ];
+then
+	echo "Error - MySQL Error code is $ret while trying to extract COUNT validation scripts for partitioned tables"
+	exit $ret
+else
+	echo "COUNT validation scripts for partitioned tables completed successfully. Stored in $outputSourcePath/3_COUNT_PARTITIONS_TBLS.hql"
+fi
+
 
 # Rename schema names
 sed "s/$oldschemaname/$newschemaname/g" $outputSourcePath/2_COUNT_NON_PARTITION_TBLS.hql > $outputTargetPath/4_COUNT_NON_PARTITION_TBLS.hql
