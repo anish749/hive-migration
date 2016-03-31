@@ -128,9 +128,9 @@ else
 fi	
 
 # Rename schema names in CT statements
-sed -i 's/$oldschemaname/$newschemaname/g' $outputTargetPath/1_DBS.hql
-sed -i 's/$oldschemaname/$newschemaname/g' $outputTargetPath/2_CT.hql
-sed -i 's/$oldschemaname/$newschemaname/g' $outputTargetPath/3_ADD_PARTITION.hql
+sed -i "s/$oldschemaname/$newschemaname/g" $outputTargetPath/1_DBS.hql
+sed -i "s/$oldschemaname/$newschemaname/g" $outputTargetPath/2_CT.hql
+sed -i "s/$oldschemaname/$newschemaname/g" $outputTargetPath/3_ADD_PARTITION.hql
 
 
 echo "Target Hive installation scripts placed at $outputTargetPath"
