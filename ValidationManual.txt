@@ -1,0 +1,54 @@
+
+-- -----------------------------------------------------------------
+-- Validation Manual
+-- -----------------------------------------------------------------
+
+
+-- -----------------------------------------------------------------
+-- STEP 0: Migrate HDFS data and Hive tables
+-- ----------------------------------------------------------------
+
+Migration of metadata as well as data is a pre requisite before following this 
+manual.
+
+-- -----------------------------------------------------------------
+-- STEP 1: Create Count(*) queries
+-- -----------------------------------------------------------------
+
+Run validations.sh
+This script creates count(*) queries separately for partitioned and non partitioned
+tables. The two Hive scripts can then be run separately in source and target Hive
+Installations.
+
+-- -----------------------------------------------------------------
+-- STEP 2: Run count(*) queries on the source Hive Installation
+-- -----------------------------------------------------------------
+
+Execute countRowsHiveSource.sh on the source Hive Installation. This runs for non 
+partitioned as well as partitioned tables.
+
+-- -----------------------------------------------------------------
+-- STEP 3: Run count(*) queries on the target Hive Installation
+-- -----------------------------------------------------------------
+
+Execute countRowsHiveTarget.sh on the target Hive Installation. This runs for non 
+partitioned as well as partitioned tables.
+
+-- -----------------------------------------------------------------
+-- STEP 4: Compare outputs.
+-- -----------------------------------------------------------------
+
+Compare the following files to find discrepancies.
+$outputSourcePath/count_non_part.txt with $outputTargetPath/count_non_part.txt
+$outputSourcePath/count_part.txt with $outputTargetPath/count_part.txt
+
+Compare commands
+diff -ray --suppress-common-lines generatedSQL_source_Hive/count_non_part.txt generatedSQL_target_Hive/count_non_part.txt
+diff -ray --suppress-common-lines generatedSQL_source_Hive/count_part.txt generatedSQL_target_Hive/count_part.txt
+
+Both should produce NULL output incase DB names are same across. Else replace 
+DB names and check.
+
+-- -----------------------------------------------------------------
+-- END
+-- -----------------------------------------------------------------
