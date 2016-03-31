@@ -83,10 +83,6 @@ cat $outputTargetPath/2_CT_temp.hql | tr '\n' '\f' | sed -e 's/)\fCREATE/);\fCRE
 echo ";">>$outputTargetPath/2_CT.hql
 rm -rf $outputTargetPath/2_CT_temp.hql
 
-
-# Rename schema names in CT statements
-# sed -i 's/oldschemaname/newschemaname/g' $outputTargetPath/2_CT.hql
-
 # Replace Name Node IP addresses
 echo "Replacing $oldNN with $newNN in CT scripts"
 sed -i "s/$oldNN/$newNN/g" $outputTargetPath/2_CT.hql
@@ -130,6 +126,12 @@ then
 else
 	echo "ADD PARTITION extraction script completed successfully"
 fi	
+
+# Rename schema names in CT statements
+sed -i 's/$oldschemaname/$newschemaname/g' $outputTargetPath/1_DBS.hql
+sed -i 's/$oldschemaname/$newschemaname/g' $outputTargetPath/2_CT.hql
+sed -i 's/$oldschemaname/$newschemaname/g' $outputTargetPath/3_ADD_PARTITION.hql
+
 
 echo "Target Hive installation scripts placed at $outputTargetPath"
 
