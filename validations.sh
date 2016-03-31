@@ -1,4 +1,4 @@
-source config.properties
+source source_wrapper.properties
 
 #Hive Script Path for source Hive Installation Scripts
 outputSourcePath=$(pwd)/generatedSQL_source_Hive
