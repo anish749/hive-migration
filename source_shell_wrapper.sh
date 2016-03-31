@@ -98,27 +98,18 @@ mysql -h$MYSQL_SERVER_HOST -u $HIVE_METASTORE_USER -p$HIVE_METASTORE_PASS -D$HIV
 -- Query to create add partition scripts to run in target Hive Installation
 
 set @SCHEMA_TO_MIGRATE = '$SCHEMA_TO_MIGRATE';
-SET @prevDB = 'nodbxyzabc_0b040aca_d613_4c47_9e2c_b21daafba13f'; -- Note - this DB should not exist in the source Hive Installation
 SET @oldNameNode = '$oldNN'; -- Old NameNode address
 SET @newNameNode = '$newNN'; -- New NameNode address
 
-SELECT 
-    REPLACE(add_partitions_script,
+SELECT
+    REPLACE(add_partition_query,
         @oldNameNode,
-        @newNameNode) AS add_partitions_script
+        @newNameNode) AS add_partition_query
+
 FROM
-    (SELECT 
-        @prevDB prev,
-            @prevDB:=D.Name curr,
-            CASE
-                WHEN
-                    @prevDB <> D.Name
-                THEN
-                    CONCAT('USE ', D.name, '\; ', ' ALTER TABLE ', T.TBL_NAME, ' ADD PARTITION (', GROUP_CONCAT(PK.PKEY_NAME, '=', '\'', PKV.PART_KEY_VAL, '\''
-                        ORDER BY PK.INTEGER_IDX), ') LOCATION \'', S.location, '\'; ')
-                ELSE CONCAT(' ALTER TABLE ', T.TBL_NAME, ' ADD PARTITION (', GROUP_CONCAT(PK.PKEY_NAME, '=', '\'', PKV.PART_KEY_VAL, '\''
-                    ORDER BY PK.INTEGER_IDX), ') LOCATION \'', S.location, '\'\; ')
-            END AS add_partitions_script
+        (SELECT
+                CONCAT('USE ', D.name, '\; ', ' ALTER TABLE ', T.TBL_NAME, ' ADD PARTITION (', GROUP_CONCAT(PK.PKEY_NAME, '=', '\'', PKV.PART_KEY_VAL, '\''
+                    ORDER BY PK.INTEGER_IDX), ') LOCATION \'', S.location, '\'\; ') AS add_partition_query
     FROM
         TBLS T
     INNER JOIN DBS D ON T.DB_ID = D.DB_ID
